@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Test extends Model
 {
+
+    protected $guarded = [];
     public function __construct($content, int $numberOfAnswers, $type)
     {
         $this->content = $content;
@@ -13,6 +15,7 @@ class Test extends Model
         $this->type = $type;
         $this->contentHtml = $this->render();
         $this->answers = $this->correctAnswers();
+        $this->questions = $this->getQuestions();
     }
 
     private function render(): \Illuminate\Support\Collection
@@ -32,6 +35,21 @@ class Test extends Model
             return '<input type="' . $this->type . '" name="' . $questionId . '-' . $index - ($questionId * $this->numberOfAnswers + 1) . '"/>' . $line . '<br>';
         });
     }
+
+    public function getQuestions(): array
+    {
+        return collect($this->content)
+            ->mapToGroups(function ($v, $k) {
+                $index = floor($k / ($this->numberOfAnswers + 1));
+                $v = str_replace('[correct]', '', $v);
+                return [$index => [$k => $v]];
+            })
+            ->map(function ($group) {
+                return $group->collapse();
+            })
+            ->toArray();
+    }
+
 
     private function correctAnswers(): array
     {
