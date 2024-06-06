@@ -5,15 +5,20 @@ namespace App\Livewire;
 use App\Models\Test;
 use Livewire\Component;
 use App\Http\Controllers\GoogleDriveController;
+use function Termwind\render;
 
 class ShowTestQuestion extends Component
 {
-    public $questionIndex; // Indeks pytań powinien zaczynać się od 0
+    public $questionIndex;
     public $numberOfAnswers;
 
     public $questions;
     public $answers;
     public $numberOfQuestions;
+
+    public $rightAnswers = 0;
+
+    public $showEndScreen;
 
     protected $listeners = ['buttonColor', 'nextQuestion'];
 
@@ -34,17 +39,27 @@ class ShowTestQuestion extends Component
     public function checkAnswer($index)
     {
         if (in_array($index, $this->answers[$this->questionIndex])) {
-            $this->dispatch('buttonColor', $index, 'bg-success');
+            $this->dispatch('buttonColor', $index, 'child-btn-success');
         } else {
-            $this->dispatch('buttonColor', $index, 'bg-danger');
+            $this->dispatch('buttonColor', $index, 'child-btn-danger');
+            foreach ($this->answers[$this->questionIndex] as $rightAnswerIndex){
+                $this->dispatch('buttonColor', $rightAnswerIndex, 'child-btn-success');
+            }
         }
     }
 
-    public function nextQuestion(){
+    public function nextQuestion($index){
         if ($this->questionIndex < $this->numberOfQuestions - 1) {
             $this->questionIndex++;
         } else {
-            $this->questionIndex = 0;
+            if (in_array($index, $this->answers[($this->questionIndex)])) {
+                $this->rightAnswers++;
+            }
+            $this->showEndScreen = true;
+        }
+
+        if (in_array($index, $this->answers[($this->questionIndex-1)])) {
+            $this->rightAnswers++;
         }
     }
 
@@ -52,6 +67,7 @@ class ShowTestQuestion extends Component
     {
         return view('livewire.show-test-question', [
             'question' => $this->getQuestionByIndex($this->questionIndex),
+            'rightAnswersNotLive' => $this->rightAnswers,
         ]);
     }
 }

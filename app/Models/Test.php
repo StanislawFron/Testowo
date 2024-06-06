@@ -16,6 +16,7 @@ class Test extends Model
         $this->contentHtml = $this->render();
         $this->answers = $this->correctAnswers();
         $this->questions = $this->getQuestions();
+        $this->numberOfQuestions = count($content);
     }
 
     private function render(): \Illuminate\Support\Collection
