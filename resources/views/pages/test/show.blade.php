@@ -1,4 +1,11 @@
-@foreach($test->contentHtml as $line)
-    {!! $line !!}
-@endforeach
-{{-- zrobić livevire z wyświetlaniem pytań + gui--}}
+<x-layout>
+    @section('head')
+        <title>My Laravel App</title>
+        @livewireStyles
+    @endsection
+    @section('body')
+        @livewire('show-test-question', ['test' => $test])
+        @livewireScripts
+    @endsection
+</x-layout>
+

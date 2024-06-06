@@ -9,14 +9,29 @@ class GoogleDriveController extends Controller
     {
         $url = 'https://docs.google.com/document/d/'.$googleDocumentNumber.'/edit?usp=sharing';
         $content = $this->fetchPageContent($url);
-        preg_match('/<script[^>]*>\s*DOCS_modelChunk\s*=\s*(.*?);\s*<\/script>/is', $content, $matches);
 
-        $startPos = strpos($matches[1], '{');
-        $endPos = strpos($matches[1], '}');
-        $docsModelChunk = substr($matches[1], $startPos, $endPos - $startPos + 1);
-        $content = json_decode($docsModelChunk, true)["s"];
+        $searchString = 'DOCS_modelChunk = [{';
+        $matches = [];
+        $offset = 0;
+        while (($pos = strpos($content, $searchString, $offset)) !== false) {
+            $endPos = strpos($content, '}}]', $pos);
+            if ($endPos !== false) {
+                $chunk = substr($content, $pos, $endPos - $pos + 2);
+                $matches[] = $chunk;
+                $offset = $endPos + 2;
+            } else {
+                break;
+            }
+        }
 
-        return preg_split('/\r\n|\r|\n/', $content);
+        $content = '';
+        foreach ($matches as $match){
+            $startPos = strpos($match, '{');
+            $endPos = strpos($match, '}');
+            $docsModelChunk = substr($match, $startPos, $endPos - $startPos + 1);
+            $content .= json_decode($docsModelChunk, true)["s"] ?? '';
+        }
+        return mb_split("[\r\n\v]+", $content);
     }
 
     private function fetchPageContent($url): string

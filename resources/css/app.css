@@ -1,0 +1,23 @@
+@import 'bootstrap/dist/css/bootstrap.css';
+
+.child-btn-success > button{
+    background-color: #00ff88;
+    border-color: #00ff88;
+}
+
+.child-btn-danger > button{
+    background-color: #ff0000;
+    border-color: #ff0000;
+}
+
+.question{
+    padding-bottom: 200px;
+}
+
+.search{
+    padding-top: 300px;
+}
+
+img {
+    border: 1px solid gray;
+}
