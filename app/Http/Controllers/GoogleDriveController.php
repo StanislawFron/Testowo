@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class GoogleDriveController extends Controller
 {
@@ -36,6 +37,18 @@ class GoogleDriveController extends Controller
 
     private function fetchPageContent($url): string
     {
-        return (new Client())->request('GET', $url)->getBody()->getContents();
+        $client = new Client();
+
+        try {
+            $response = $client->request('GET', $url);
+            $body = $response->getBody()->getContents();
+        } catch (ClientException $e) {
+            session_start();
+            $_SESSION['error_message'] = 'Upewnij się, że podałeś poprawny link i widoczność dokumentu jest ustawiona na "każda osoba mająca link"';
+            header('Location: /');
+            exit;
+        }
+
+        return $body;
     }
 }

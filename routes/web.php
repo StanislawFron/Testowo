@@ -8,6 +8,6 @@ Route::match(['get', 'post'], '/test/{google_document_number}/{number_of_answers
 
 //http://localhost:8000/test/10I3OiNUYWvwXBGNnYlUWb7YQ46rmTQRK8YWcKH7_wyY/4/checkbox
 
-Route::get('/', [TestController::class, 'index']);
+Route::get('/', [TestController::class, 'index'])->name('test.index');
 
 Route::get('/documentation', [DocumentationController::class, 'index']);

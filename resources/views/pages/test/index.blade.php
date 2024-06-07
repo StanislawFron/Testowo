@@ -3,6 +3,13 @@
         <title>Strona z testami</title>
     @endsection
     @section('body')
+        @php
+            session_start();
+               if (isset($_SESSION['error_message'])) {
+               echo '<div class="error-message alert alert-danger">' . htmlspecialchars($_SESSION['error_message']) . '</div>';
+               unset($_SESSION['error_message']);
+               }
+        @endphp
         <div class="container d-flex justify-content-center align-items-center search">
             <div class="row col-12 text-center">
                     <h1>Otwórz test z pliku Google Dokumenty</h1>
@@ -15,6 +22,23 @@
                             <button type="submit" class="btn btn-primary mt-3">Otwórz test</button>
                         </div>
                     </form>
+
+                <h2 class="pt-5">Popularne testy</h2>
+                <div class="row d-flex justify-content-center">
+                    <div class="card col-3 m-2">
+                        <div class="card-body">
+                            <h5 class="card-title">Test1</h5>
+                            10I3OiNUYWvwXBGNnYlUWb7YQ46rmTQRK8YWcKH7_wyY
+                        </div>
+                    </div>
+                    <div class="card col-3 m-2">
+                        <div class="card-body">
+                            <h5 class="card-title">Test2</h5>
+                            10pvQF-SeSsGLh-KUMZDu51pxTD1y_gombAxbdj-_kzk
+                        </div>
+                    </div>
+                </div>
+
                 <h2 class="pt-5 mt-5">Jak uzyskać dostęp do testu?</h2>
                 <h3>1. Stwórz plik google word i wypełnij go pytaniami w ten sposób:</h3>
                 <div class="pt-3"><img src="{{ asset('images/test.png') }}" alt="test"></div>

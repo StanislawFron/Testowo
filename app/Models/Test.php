@@ -59,6 +59,6 @@ class Test extends Model
                 $carry[floor($k / ($this->numberOfAnswers + 1))][] = $k - floor($k / ($this->numberOfAnswers + 1)) * ($this->numberOfAnswers + 1);
             }
             return $carry;
-        });
+        }) ?? [];
     }
 }

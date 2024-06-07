@@ -18,10 +18,10 @@
                 @endforeach
             </div>
             @else
-                <h1>Zakończono test z wynikiem {{round($questionIndex != 0 ? ($rightAnswers/$questionIndex*100 > 100 ? 100 : $rightAnswers/$questionIndex*100) : 0)}}%</h1>
+                <h1>Zakończono test z wynikiem {{round($questionIndex != 0 ? ($rightAnswers/($questionIndex+1)*100 > 100 ? 100 : $rightAnswers/($questionIndex+1)*100) : 0)}}%</h1>
                 <form action="/">
                     @csrf
-                    <button class="btn btn-primary pt-3">Wroć na stonę główną</button>
+                    <button class="btn btn-primary mt-3">Wroć na stonę główną</button>
                 </form>
             @endif
         </div>
